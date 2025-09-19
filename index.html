@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LATIHAN SOAL TKA MATEMATIKA</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            width: 95%;
+            max-width: 1200px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #f9f9f9;
+            border-left: 1px solid #eee;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+        }
+
+        .header h1 {
+            color: #333;
+            margin: 0;
+            font-size: 1.8em;
+        }
+
+        .timer-box, .current-time-box {
+            background-color: #e0f7fa;
+            border: 1px solid #b2ebf2;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 1.1em;
+            color: #00796b;
+        }
+        .timer-box strong, .current-time-box strong {
+            display: block;
+            margin-top: 5px;
+            font-size: 1.2em;
+            color: #004d40;
+        }
+
+        .question-navigation {
+            margin-top: 20px;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+
+        .question-navigation h3 {
+            margin-top: 0;
+            color: #555;
+            font-size: 1.2em;
+        }
+
+        .question-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .question-list button {
+            width: 40px;
+            height: 40px;
+            background-color: #eee;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            color: #333;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .question-list button:hover {
+            background-color: #ddd;
+            border-color: #bbb;
+        }
+
+        .question-list button.active {
+            background-color: #007bff;
+            color: #fff;
+            border-color: #007bff;
+        }
+
+        .question-list button.answered {
+            background-color: #28a745;
+            color: #fff;
+            border-color: #28a745;
+        }
+        
+        .question-list button.answered.active {
+            background-color: #007bff; /* Active answered question retains blue */
+            border-color: #007bff;
+        }
+
+        .question-area {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fafafa;
+        }
+
+        .question-area h2 {
+            color: #333;
+            font-size: 1.4em;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .question-text {
+            margin-bottom: 20px;
+            line-height: 1.6;
+            font-size: 1.1em;
+        }
+        
+        .question-text p {
+            margin-bottom: 10px;
+        }
+
+        .options label {
+            display: block;
+            margin-bottom: 10px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .options input[type="radio"] {
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        .navigation-buttons {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .navigation-buttons button, .finish-button button {
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+
+        .navigation-buttons button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .prev-button {
+            background-color: #6c757d;
+            color: #fff;
+        }
+        .prev-button:hover:enabled {
+            background-color: #5a6268;
+        }
+
+        .next-button {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .next-button:hover:enabled {
+            background-color: #0056b3;
+        }
+
+        .finish-button {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .finish-button button {
+            background-color: #dc3545;
+            color: #fff;
+            padding: 12px 25px;
+            font-size: 1.1em;
+        }
+        .finish-button button:hover {
+            background-color: #c82333;
+        }
+
+        .score-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 30px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .modal-content h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .modal-content p {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+        }
+
+        .modal-content .score-value {
+            font-size: 2.5em;
+            color: #28a745;
+            font-weight: bold;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        .modal-content button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.2s;
+        }
+
+        .modal-content button:hover {
+            background-color: #0056b3;
+        }
+
+        .question-text img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 15px auto;
+            border: 1px solid #eee;
+            border-radius: 5px;
+        }
+
+        /* Review mode specific styles */
+        .review-mode-info {
+            padding: 10px;
+            margin-bottom: 15px;
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .review-solution-button {
+            background-color: #17a2b8;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.2s;
+        }
+        .review-solution-button:hover {
+            background-color: #138496;
+        }
+        .solution-text {
+            margin-top: 10px;
+            padding: 15px;
+            background-color: #e2f0fb;
+            border: 1px solid #bce8f1;
+            border-radius: 5px;
+            display: none; /* Hidden by default */
+        }
+        .solution-text p {
+            margin-bottom: 5px;
+        }
+        .correct-answer-label {
+            font-weight: bold;
+            color: #28a745; /* Green for correct answer */
+        }
+        .user-answer-label {
+            font-weight: bold;
+            color: #007bff; /* Blue for user's answer */
+        }
+        .wrong-answer-label {
+            font-weight: bold;
+            color: #dc3545; /* Red if user's answer is wrong */
+        }
+        .options.review label input[type="radio"] {
+            pointer-events: none; /* Disable radio button interaction in review */
+        }
+
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                width: 100%;
+                margin: 0;
+                border-radius: 0;
+            }
+            .sidebar {
+                width: 100%;
+                border-left: none;
+                border-bottom: 1px solid #eee;
+                order: 2;
+            }
+            .main-content {
+                order: 1;
+            }
+            .question-list {
+                grid-template-columns: repeat(auto-fill, minmax(35px, 1fr));
+                gap: 5px;
+            }
+            .question-list button {
+                width: 35px;
+                height: 35px;
+                font-size: 0.8em;
+            }
+            .navigation-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .finish-button button {
+                width: 100%;
+            }
+        }
+    </style>
+    <!-- Load MathJax for LaTeX rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+</head>
+<body>
+    <div class="container">
+        <div class="main-content">
+            <div class="header">
+                <h1>LATIHAN SOAL TKA MATEMATIKA - 02</h1>
+                <div id="current-time" class="current-time-box"><strong></strong></div>
+            </div>
+            
+            <div id="question-area" class="question-area">
+                <!-- Question will be loaded here by JavaScript -->
+            </div>
+
+            <div id="exam-navigation" class="navigation-buttons">
+                <button id="prev-button" class="prev-button" disabled>Previous</button>
+                <button id="next-button" class="next-button">Next</button>
+            </div>
+            <div id="exam-finish" class="finish-button">
+                <button id="finish-exam-button">Selesai Ujian</button>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <div class="timer-box">
+                Waktu Tersisa: <strong id="countdown-timer">00:00:00</strong>
+            </div>
+            <div class="question-navigation">
+                <h3>Nomor Soal</h3>
+                <div id="question-list" class="question-list">
+                    <!-- Question navigation buttons will be loaded here by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Score Modal -->
+    <div id="scoreModal" class="score-modal">
+        <div class="modal-content">
+            <h2>Ujian Selesai!</h2>
+            <p>Anda telah menyelesaikan ujian.</p>
+            <p>Skor Anda:</p>
+            <div id="finalScore" class="score-value"></div>
+            <p id="feedbackMessage"></p>
+            <button id="closeModal">Lihat Hasil dan Solusi</button>
+        </div>
+    </div>
+
+    <script>
+        // Array of questions, options, correct answers, and solutions
+        const questions = [
+            {
+                id: 1,
+                text: "Nilai dari \\((0.8 - \\frac{1}{5}) \\div 0.6 + \\frac{1}{2}\\) adalah ....",
+                options: ["1", "1.5", "2", "2.5", "3"],
+                answer: "1.5",
+                solution: "Langkah 1: Ubah semua bilangan ke bentuk pecahan atau desimal yang seragam. Kita pilih desimal.<br>\\(\\frac{1}{5} = 0.2\\)<br>\\(\\frac{1}{2} = 0.5\\)<br>\\(0.6\\) tetap \\(0.6\\)<br><br>Langkah 2: Lakukan operasi dalam kurung.<br>\\((0.8 - 0.2) = 0.6\\)<br><br>Langkah 3: Lakukan operasi pembagian.<br>\\(0.6 \\div 0.6 = 1\\)<br><br>Langkah 4: Lakukan operasi penjumlahan.<br>\\(1 + 0.5 = 1.5\\)<br><br>Jadi, nilai dari \\((0.8 - \\frac{1}{5}) \\div 0.6 + \\frac{1}{2}\\) adalah \\(1.5\\)."
+            },
+            {
+                id: 2,
+                text: "Tentukan nilai \\(x\\) yang memenuhi persamaan \\(3(x - 2) + 5 = 2x + 7\\).",
+                options: ["\\(x = 5\\)", "\\(x = 6\\)", "\\(x = 7\\)", "\\(x = 8\\)", "\\(x = 9\\)"],
+                answer: "x = 8",
+                solution: "Langkah 1: Distribusikan \\(3\\) ke dalam kurung.<br>\\(3x - 6 + 5 = 2x + 7\\)<br><br>Langkah 2: Sederhanakan sisi kiri.<br>\\(3x - 1 = 2x + 7\\)<br><br>Langkah 3: Pindahkan semua suku yang mengandung \\(x\\) ke satu sisi (misal kiri) dan konstanta ke sisi lain (misal kanan).<br>\\(3x - 2x = 7 + 1\\)<br><br>Langkah 4: Sederhanakan kedua sisi.<br>\\(x = 8\\)<br><br>Jadi, nilai \\(x\\) yang memenuhi persamaan adalah \\(8\\)."
+            },
+            {
+                id: 3,
+                text: "Sebuah persegi panjang memiliki luas \\(48\\) cm\\(^2\\). Jika salah satu sisinya adalah \\(6\\) cm, berapakah keliling persegi panjang tersebut?",
+                options: ["\\(20\\) cm", "\\(24\\) cm", "\\(28\\) cm", "\\(30\\) cm", "\\(32\\) cm"],
+                answer: "28 cm",
+                solution: "Langkah 1: Tentukan panjang sisi lain (lebar) dari persegi panjang.<br>Rumus luas persegi panjang: \\(Luas = Panjang \\times Lebar\\)<br>Diketahui \\(Luas = 48\\) cm\\(^2\\) dan salah satu sisi (misal panjang) \\(= 6\\) cm.<br>Maka, \\(48 = 6 \\times Lebar\\)<br>\\(Lebar = \\frac{48}{6} = 8\\) cm.<br><br>Langkah 2: Hitung keliling persegi panjang.<br>Rumus keliling persegi panjang: \\(Keliling = 2 \\times (Panjang + Lebar)\\)<br>\\(Keliling = 2 \\times (6 + 8)\\)<br>\\(Keliling = 2 \\times 14\\)<br>\\(Keliling = 28\\) cm.<br><br>Jadi, keliling persegi panjang tersebut adalah \\(28\\) cm."
+            },
+            {
+                id: 4,
+                text: "Dalam sebuah kotak terdapat 4 kelereng merah dan 6 kelereng biru. Jika diambil dua kelereng secara berurutan tanpa pengembalian, berapakah peluang terambil kelereng merah pada pengambilan pertama dan kelereng biru pada pengambilan kedua?",
+                options: ["\\(\\frac{4}{15}\\)", "\\(\\frac{2}{5}\\)", "\\(\\frac{12}{25}\\)", "\\(\\frac{1}{3}\\)", "\\(\\frac{1}{2}\\)"],
+                answer: "\\(\\frac{4}{15}\\)",
+                solution: "Langkah 1: Tentukan total jumlah kelereng.<br>Jumlah kelereng merah = 4<br>Jumlah kelereng biru = 6<br>Total kelereng = \\(4 + 6 = 10\\).<br><br>Langkah 2: Hitung peluang pengambilan pertama (kelereng merah).<br>\\(P(\\text{merah pada pengambilan pertama}) = \\frac{\\text{jumlah kelereng merah}}{\\text{total kelereng}} = \\frac{4}{10}\\).<br><br>Langkah 3: Hitung peluang pengambilan kedua (kelereng biru) setelah pengambilan pertama tanpa pengembalian.<br>Setelah 1 kelereng merah diambil, sisa total kelereng adalah \\(10 - 1 = 9\\).<br>Jumlah kelereng biru masih 6.<br>\\(P(\\text{biru pada pengambilan kedua | merah pada pengambilan pertama}) = \\frac{\\text{jumlah kelereng biru}}{\\text{sisa total kelereng}} = \\frac{6}{9}\\).<br><br>Langkah 4: Kalikan kedua peluang untuk mendapatkan peluang kejadian berurutan.<br>\\(P(\\text{merah lalu biru}) = \\frac{4}{10} \\times \\frac{6}{9}\\)<br>Sederhanakan pecahan sebelum mengalikan:<br>\\(\\frac{4}{10} = \\frac{2}{5}\\)<br>\\(\\frac{6}{9} = \\frac{2}{3}\\)<br>\\(P(\\text{merah lalu biru}) = \\frac{2}{5} \\times \\frac{2}{3} = \\frac{4}{15}\\)<br><br>Jadi, peluang terambil kelereng merah pada pengambilan pertama dan kelereng biru pada pengambilan kedua adalah \\(\\frac{4}{15}\\)."
+            },
+            {
+                id: 5,
+                text: "Jika \\(\\sin \\alpha = \\frac{3}{5}\\) dan \\(\\alpha\\) adalah sudut lancip, maka nilai dari \\(\\tan \\alpha\\) adalah ....",
+                options: ["\\(\\frac{3}{4}\\)", "\\(\\frac{4}{3}\\)", "\\(\\frac{5}{3}\\)", "\\(\\frac{5}{4}\\)", "\\(\\frac{1}{2}\\)"],
+                answer: "\\(\\frac{3}{4}\\)",
+                solution: "Langkah 1: Pahami definisi \\(\\sin \\alpha\\) dalam segitiga siku-siku.<br>\\(\\sin \\alpha = \\frac{\\text{sisi depan}}{\\text{sisi miring}}\\)<br>Diketahui \\(\\sin \\alpha = \\frac{3}{5}\\), jadi sisi depan = 3 dan sisi miring = 5.<br><br>Langkah 2: Gunakan Teorema Pythagoras untuk mencari panjang sisi samping.<br>Sisi samping\\(^2\\) + Sisi depan\\(^2\\) = Sisi miring\\(^2\\)<br>Sisi samping\\(^2\\) + \\(3^2 = 5^2\\)<br>Sisi samping\\(^2\\) + \\(9 = 25\\)<br>Sisi samping\\(^2\\) = \\(25 - 9 = 16\\)<br>Sisi samping = \\(\\sqrt{16} = 4\\).<br><br>Langkah 3: Tentukan nilai \\(\\tan \\alpha\\).<br>\\(\\tan \\alpha = \\frac{\\text{sisi depan}}{\\text{sisi samping}}\\)<br>\\(\\tan \\alpha = \\frac{3}{4}\\)<br><br>Karena \\(\\alpha\\) adalah sudut lancip (berada di kuadran I), semua nilai trigonometri positif. Jadi, nilai \\(\\tan \\alpha\\) adalah \\(\\frac{3}{4}\\)."
+            },
+            {
+                id: 6,
+                text: "Sebuah bola dilempar ke atas. Ketinggian \\(h(t)\\) dalam meter setelah \\(t\\) detik dinyatakan dengan fungsi \\(h(t) = 1 + 10t - 5t^2\\). Pada detik ke berapa bola mencapai ketinggian maksimum?",
+                options: ["\\(0.5\\) detik", "\\(1\\) detik", "\\(1.5\\) detik", "\\(2\\) detik", "\\(2.5\\) detik"],
+                answer: "1 detik",
+                solution: "Fungsi ketinggian adalah \\(h(t) = 1 + 10t - 5t^2\\). Ini adalah fungsi kuadrat dalam bentuk \\(at^2 + bt + c\\) dengan \\(a = -5\\), \\(b = 10\\), dan \\(c = 1\\).<br><br>Untuk fungsi kuadrat \\(at^2 + bt + c\\), titik puncak (maksimum atau minimum) terjadi pada \\(t = -\\frac{b}{2a}\\).<br><br>Langkah 1: Identifikasi nilai \\(a\\) dan \\(b\\) dari fungsi ketinggian.<br>\\(a = -5\\)<br>\\(b = 10\\)<br><br>Langkah 2: Gunakan rumus untuk mencari waktu \\(t\\) saat ketinggian maksimum.<br>\\(t = -\\frac{b}{2a} = -\\frac{10}{2(-5)} = -\\frac{10}{-10} = 1\\).<br><br>Jadi, bola mencapai ketinggian maksimum pada detik ke \\(1\\)."
+            },
+            {
+                id: 7,
+                text: "Jumlah \\(n\\) suku pertama dari suatu barisan aritmetika diberikan oleh rumus \\(S_n = 2n^2 + 3n\\). Tentukan suku ke-5 dari barisan tersebut.",
+                options: ["15", "17", "19", "21", "23"],
+                answer: "21",
+                solution: "Langkah 1: Cari suku pertama (\\(a_1\\)) menggunakan \\(S_1\\).<br>\\(S_1 = 2(1)^2 + 3(1) = 2(1) + 3 = 2 + 3 = 5\\).<br>Jadi, \\(a_1 = 5\\).<br><br>Langkah 2: Cari jumlah dua suku pertama (\\(S_2\\)) untuk menemukan suku kedua (\\(a_2\\)).<br>\\(S_2 = 2(2)^2 + 3(2) = 2(4) + 6 = 8 + 6 = 14\\).<br>\\(a_2 = S_2 - S_1 = 14 - 5 = 9\\).<br><br>Langkah 3: Tentukan beda (\\(d\\)) barisan aritmetika.<br>\\(d = a_2 - a_1 = 9 - 5 = 4\\).<br><br>Langkah 4: Gunakan rumus suku ke-\\n (\\(a_n\\)) untuk barisan aritmetika.<br>\\(a_n = a_1 + (n-1)d\\)<br>Untuk suku ke-5 (\\(n=5\\)):<br>\\(a_5 = 5 + (5-1)4\\)<br>\\(a_5 = 5 + (4)4\\)<br>\\(a_5 = 5 + 16\\)<br>\\(a_5 = 21\\)<br><br>Jadi, suku ke-5 dari barisan tersebut adalah \\(21\\)."
+            },
+            {
+                id: 8,
+                text: "Sebuah balok memiliki panjang \\(6\\) cm, lebar \\(8\\) cm, dan tinggi \\(10\\) cm. Berapakah panjang diagonal ruang balok tersebut?",
+                options: ["\\(10\\) cm", "\\(12\\) cm", "\\(10\\sqrt{2}\\) cm", "\\(10\\sqrt{3}\\) cm", "\\(14\\) cm"],
+                answer: "10\\sqrt{2} cm",
+                solution: "Langkah 1: Hitung panjang diagonal alas (\\(d_{alas}\\)).<br>Diagonal alas balok dihitung menggunakan Teorema Pythagoras pada alasnya (panjang dan lebar).<br>\\(d_{alas}^2 = panjang^2 + lebar^2\\)<br>\\(d_{alas}^2 = 6^2 + 8^2\\)<br>\\(d_{alas}^2 = 36 + 64\\)<br>\\(d_{alas}^2 = 100\\)<br>\\(d_{alas} = \\sqrt{100} = 10\\) cm.<br><br>Langkah 2: Hitung panjang diagonal ruang (\\(d_{ruang}\\)).<br>Diagonal ruang dihitung menggunakan Teorema Pythagoras lagi, dengan diagonal alas dan tinggi balok.<br>\\(d_{ruang}^2 = d_{alas}^2 + tinggi^2\\)<br>\\(d_{ruang}^2 = 10^2 + 10^2\\)<br>\\(d_{ruang}^2 = 100 + 100\\)<br>\\(d_{ruang}^2 = 200\\)<br>\\(d_{ruang} = \\sqrt{200}\\)<br>\\(d_{ruang} = \\sqrt{100 \\times 2}\\)<br>\\(d_{ruang} = 10\\sqrt{2}\\) cm.<br><br>Jadi, panjang diagonal ruang balok tersebut adalah \\(10\\sqrt{2}\\) cm."
+            },
+            {
+                id: 9,
+                text: "Diketahui pernyataan \\(P\\) adalah 'Hari ini hujan' dan \\(Q\\) adalah 'Saya membawa payung'. Bentuk pernyataan 'Jika saya tidak membawa payung, maka hari ini tidak hujan' dalam simbol logika adalah ....",
+                options: ["\\(P \\rightarrow Q\\)", "\\(Q \\rightarrow P\\)", "\\(\\neg Q \\rightarrow \\neg P\\)", "\\(\\neg P \\rightarrow \\neg Q\\)", "\\(P \\land \\neg Q\\)"],
+                answer: "\\(\\neg Q \\rightarrow \\neg P\\)",
+                solution: "Langkah 1: Identifikasi pernyataan dasar dan simbolnya.<br>\\(P\\): 'Hari ini hujan'<br>\\(Q\\): 'Saya membawa payung'<br><br>Langkah 2: Terjemahkan bagian 'Saya tidak membawa payung' ke simbol logika.<br>Negasi dari \\(Q\\) adalah \\(\\neg Q\\) (dibaca 'tidak Q' atau 'bukan Q'). Jadi, 'Saya tidak membawa payung' adalah \\(\\neg Q\\).<br><br>Langkah 3: Terjemahkan bagian 'hari ini tidak hujan' ke simbol logika.<br>Negasi dari \\(P\\) adalah \\(\\neg P\\) (dibaca 'tidak P' atau 'bukan P'). Jadi, 'Hari ini tidak hujan' adalah \\(\\neg P\\).<br><br>Langkah 4: Gabungkan kedua negasi dengan operator 'jika... maka...'.<br>Operator 'jika... maka...' dilambangkan dengan \\(\\rightarrow\\).<br>Jadi, 'Jika saya tidak membawa payung, maka hari ini tidak hujan' menjadi \\(\\neg Q \\rightarrow \\neg P\\).<br><br>Pernyataan ini dikenal sebagai kontraposisi dari \\(P \\rightarrow Q\\) dan secara logis ekuivalen dengan \\(P \\rightarrow Q\\)."
+            },
+            {
+                id: 10,
+                text: "Tentukan turunan pertama dari fungsi \\(f(x) = 4x^3 - 2x^2 + 5x - 1\\).",
+                options: ["\\(f'(x) = 12x^2 - 4x + 5\\)", "\\(f'(x) = 4x^2 - 2x + 5\\)", "\\(f'(x) = 12x^3 - 4x^2 + 5x\\)", "\\(f'(x) = 12x^2 - 4x - 1\\)", "\\(f'(x) = 3x^2 - 2x + 5\\)"],
+                answer: "f'(x) = 12x^2 - 4x + 5",
+                solution: "Gunakan aturan dasar turunan untuk polinomial: jika \\(g(x) = ax^n\\), maka \\(g'(x) = anx^{n-1}\\). Untuk konstanta, turunannya adalah 0.<br><br>Fungsi yang diberikan adalah \\(f(x) = 4x^3 - 2x^2 + 5x - 1\\).<br><br>Langkah 1: Turunkan suku pertama, \\(4x^3\\).<br>\\(\\frac{d}{dx}(4x^3) = 4 \\times 3x^{3-1} = 12x^2\\).<br><br>Langkah 2: Turunkan suku kedua, \\(-2x^2\\).<br>\\(\\frac{d}{dx}(-2x^2) = -2 \\times 2x^{2-1} = -4x\\).<br><br>Langkah 3: Turunkan suku ketiga, \\(5x\\).<br>\\(\\frac{d}{dx}(5x) = 5 \\times 1x^{1-1} = 5x^0 = 5 \\times 1 = 5\\).<br><br>Langkah 4: Turunkan suku keempat, \\(-1\\) (konstanta).<br>\\(\\frac{d}{dx}(-1) = 0\\).<br><br>Langkah 5: Gabungkan semua turunan.<br>\\(f'(x) = 12x^2 - 4x + 5 - 0\\)<br>\\(f'(x) = 12x^2 - 4x + 5\\)<br><br>Jadi, turunan pertama dari fungsi \\(f(x) = 4x^3 - 2x^2 + 5x - 1\\) adalah \\(f'(x) = 12x^2 - 4x + 5\\)."
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        const userAnswers = new Array(questions.length).fill(null);
+        let timeLeft = 30 * 60; // 60 minutes in seconds
+        let timerInterval;
+        let isReviewMode = false; // New flag for review mode
+
+        // Get DOM elements
+        const questionArea = document.getElementById('question-area');
+        const questionListContainer = document.getElementById('question-list');
+        const prevButton = document.getElementById('prev-button');
+        const nextButton = document.getElementById('next-button');
+        const finishExamButton = document.getElementById('finish-exam-button');
+        const countdownTimerDisplay = document.getElementById('countdown-timer');
+        const currentTimeDisplay = document.querySelector('#current-time strong');
+        const scoreModal = document.getElementById('scoreModal');
+        const finalScoreDisplay = document.getElementById('finalScore');
+        const feedbackMessage = document.getElementById('feedbackMessage');
+        const closeModalButton = document.getElementById('closeModal');
+        const examNavigationDiv = document.getElementById('exam-navigation');
+        const examFinishDiv = document.getElementById('exam-finish');
+
+
+        // Function to render MathJax equations
+        function renderMathJax() {
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        // Function to load and display a question
+        function loadQuestion(index) {
+            currentQuestionIndex = index;
+            const question = questions[index];
+            let optionsHtml = '';
+
+            question.options.forEach((option, i) => {
+                const optionId = `q${question.id}-option${i}`;
+                const isChecked = userAnswers[index] === option;
+                const isCorrect = question.answer === option;
+                
+                let labelClass = '';
+                if (isReviewMode) {
+                    if (isCorrect) {
+                        labelClass = 'correct-answer-label';
+                    } else if (isChecked && !isCorrect) {
+                        labelClass = 'wrong-answer-label';
+                    } else if (isChecked && isCorrect) {
+                        // User's correct answer, might want a specific highlight for user's correct choice
+                        labelClass = 'user-answer-label correct-answer-label';
+                    }
+                }
+
+                optionsHtml += `
+                    <label for="${optionId}" class="${labelClass}">
+                        <input type="radio" id="${optionId}" name="question${question.id}" value="${option}" ${isChecked ? 'checked' : ''} ${isReviewMode ? 'disabled' : ''}>
+                        ${option}
+                    </label>
+                `;
+            });
+
+            let solutionSection = '';
+            let optionsAreaClass = 'options';
+            if (isReviewMode) {
+                optionsAreaClass += ' review';
+                solutionSection = `
+                    <button class="review-solution-button" onclick="toggleSolution(${question.id})">Tampilkan Solusi</button>
+                    <div id="solution-${question.id}" class="solution-text">
+                        <p><strong>Solusi:</strong></p>
+                        <p>${question.solution}</p>
+                    </div>
+                `;
+            }
+
+            questionArea.innerHTML = `
+                <h2>Soal No. ${question.id}</h2>
+                <div class="question-text">${question.text}</div>
+                <div class="${optionsAreaClass}">
+                    ${optionsHtml}
+                </div>
+                ${solutionSection}
+            `;
+            
+            // Add event listeners to radio buttons only in exam mode
+            if (!isReviewMode) {
+                const radioButtons = questionArea.querySelectorAll('input[type="radio"]');
+                radioButtons.forEach(radio => {
+                    radio.addEventListener('change', (event) => {
+                        saveAnswer(index, event.target.value);
+                    });
+                });
+            }
+            
+            updateNavigationButtons();
+            updateQuestionListColors();
+            renderMathJax(); // Render any new math elements
+        }
+
+        // Function to toggle solution visibility
+        function toggleSolution(questionId) {
+            const solutionDiv = document.getElementById(`solution-${questionId}`);
+            // Select the button within the current question area to avoid toggling all buttons
+            const button = questionArea.querySelector('.review-solution-button'); 
+            if (solutionDiv.style.display === 'none' || solutionDiv.style.display === '') {
+                solutionDiv.style.display = 'block';
+                button.textContent = 'Sembunyikan Solusi';
+            } else {
+                solutionDiv.style.display = 'none';
+                button.textContent = 'Tampilkan Solusi';
+            }
+            renderMathJax(); // Re-render MathJax in case solution content was hidden/displayed
+        }
+
+        // Function to save user's answer
+        function saveAnswer(questionIndex, value) {
+            userAnswers[questionIndex] = value;
+            updateQuestionListColors();
+        }
+
+        // Function to update navigation buttons (Prev/Next) state
+        function updateNavigationButtons() {
+            prevButton.disabled = currentQuestionIndex === 0;
+            nextButton.disabled = currentQuestionIndex === questions.length - 1;
+        }
+
+        // Function to update question list buttons (color coding)
+        function updateQuestionListColors() {
+            questionListContainer.innerHTML = '';
+            questions.forEach((q, index) => {
+                const button = document.createElement('button');
+                button.textContent = q.id;
+                button.onclick = () => loadQuestion(index);
+                if (index === currentQuestionIndex) {
+                    button.classList.add('active');
+                }
+                if (userAnswers[index] !== null) {
+                    button.classList.add('answered');
+                }
+                questionListContainer.appendChild(button);
+            });
+        }
+
+        // Function to start the countdown timer
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                const hours = Math.floor(timeLeft / 3600);
+                const minutes = Math.floor((timeLeft % 3600) / 60);
+                const seconds = timeLeft % 60;
+
+                countdownTimerDisplay.textContent = 
+                    `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    alert('Waktu ujian habis!');
+                    finishExam();
+                }
+                timeLeft--;
+            }, 1000);
+        }
+
+        // Function to update current time display
+        function updateCurrentTime() {
+            const now = new Date();
+            currentTimeDisplay.textContent = now.toLocaleString('id-ID', {
+                weekday: 'long', year: 'numeric', month: 'long', 
+                day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit'
+            });
+        }
+
+        // Function to calculate the final score
+        function calculateScore() {
+            let correctAnswers = 0;
+            questions.forEach((q, index) => {
+                if (userAnswers[index] === q.answer) {
+                    correctAnswers++;
+                }
+            });
+            return (correctAnswers / questions.length) * 100;
+        }
+
+        // Function to finalize the exam and show the score modal
+        function finishExam() {
+            clearInterval(timerInterval);
+            const score = calculateScore();
+            finalScoreDisplay.textContent = `${score.toFixed(2)}%`;
+            if (score >= 80) {
+                feedbackMessage.textContent = "Selamat! Anda mendapatkan skor yang sangat baik.";
+                finalScoreDisplay.style.color = "#28a745";
+            } else if (score >= 60) {
+                feedbackMessage.textContent = "Cukup baik, terus tingkatkan kemampuan Anda.";
+                finalScoreDisplay.style.color = "#ffc107";
+            } else {
+                feedbackMessage.textContent = "Perlu lebih banyak belajar dan berlatih.";
+                finalScoreDisplay.style.color = "#dc3545";
+            }
+            scoreModal.style.display = 'flex';
+        }
+
+        // Function to switch to review mode after the exam
+        function enterReviewMode() {
+            isReviewMode = true;
+            // Hide exam-specific elements
+            document.querySelector('.timer-box').style.display = 'none';
+            examFinishDiv.style.display = 'none';
+            examNavigationDiv.style.justifyContent = 'center'; // Center navigation buttons
+
+            // Add an info message about review mode
+            const reviewInfo = document.createElement('div');
+            reviewInfo.classList.add('review-mode-info');
+            reviewInfo.textContent = 'Anda dalam mode review. Jawaban yang benar ditandai hijau, dan jawaban Anda (jika salah) ditandai merah. Klik tombol "Tampilkan Solusi" untuk melihat langkah penyelesaian.';
+            questionArea.insertAdjacentElement('beforebegin', reviewInfo);
+
+            loadQuestion(0); // Load the first question in review mode
+        }
+
+        // Event Listeners
+        prevButton.addEventListener('click', () => {
+            if (currentQuestionIndex > 0) {
+                loadQuestion(currentQuestionIndex - 1);
+            }
+        });
+
+        nextButton.addEventListener('click', () => {
+            if (currentQuestionIndex < questions.length - 1) {
+                loadQuestion(currentQuestionIndex + 1);
+            }
+        });
+
+        finishExamButton.addEventListener('click', () => {
+            if (confirm('Apakah Anda yakin ingin mengakhiri ujian? Waktu akan berhenti dan jawaban akan dinilai.')) {
+                finishExam();
+            }
+        });
+
+        closeModalButton.addEventListener('click', () => {
+            scoreModal.style.display = 'none';
+            enterReviewMode();
+        });
+
+        // Initialize the exam when the window loads
+        window.onload = () => {
+            loadQuestion(currentQuestionIndex);
+            startTimer();
+            updateCurrentTime();
+            setInterval(updateCurrentTime, 1000); // Update current time every second
+        };
+    </script>
+</body>
+</html>
